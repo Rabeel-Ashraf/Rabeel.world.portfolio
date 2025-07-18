@@ -68,7 +68,7 @@ const ProfileSection = () => {
           variants={itemVariants}
         >
           <motion.a
-            href="https://github.com/rabeelashraf"
+            href="https://github.com/Rabeel-Ashraf"
             target="_blank"
             rel="noopener noreferrer"
             className="p-3 bg-gray-800/50 rounded-full border border-purple-500/30 hover:border-purple-500 transition-all duration-300"

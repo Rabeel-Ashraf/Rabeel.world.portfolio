@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from './components/Header';
 import ProfileSection from './components/ProfileSection';
 import GallerySection from './components/GallerySection';
 import WorkSection from './components/WorkSection';
 import FloatingParticles from './components/FloatingParticles';
-
-function App() {
+import NotFound from './components/NotFound';
+import EnhancedTouchEffects from './components/EnhancedTouchEffects';
+const MainPortfolio = () => {
   const [currentSection, setCurrentSection] = useState('Profile');
 
   const sectionVariants = {
@@ -38,7 +40,6 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 relative overflow-hidden">
-      <FloatingParticles />
       
       <Header 
         currentSection={currentSection}
@@ -102,6 +103,17 @@ function App() {
       </footer>
     </div>
   );
-}
+};
 
+function App() {
+  return (
+    <Router>
+      <EnhancedTouchEffects />
+      <Routes>
+        <Route path="/" element={<MainPortfolio />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Router>
+  );
+}
 export default App;
