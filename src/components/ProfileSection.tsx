@@ -7,7 +7,7 @@ import {
   GlobeAltIcon
 } from '@heroicons/react/24/outline';
 import { Github, Linkedin, Mail } from 'lucide-react';
-import EarthObject from './EarthObject';
+import RealisticEarth from './RealisticEarth';
 
 const ProfileSection = () => {
   const personalInfo = {
@@ -197,7 +197,7 @@ const ProfileSection = () => {
           </div>
         </motion.div>
 
-        <EarthObject />
+        <RealisticEarth />
       </motion.div>
     </motion.div>
   );
