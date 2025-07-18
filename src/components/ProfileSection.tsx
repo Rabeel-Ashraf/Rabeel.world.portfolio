@@ -49,11 +49,13 @@ const ProfileSection = () => {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
+      style={{ willChange: 'transform, opacity' }}
     >
       {/* Hero Section */}
       <motion.div 
         className="text-center space-y-6"
         variants={itemVariants}
+        style={{ willChange: 'transform, opacity' }}
       >
         <h1 className="text-5xl md:text-6xl font-bold text-white">
           {personalInfo.name}
@@ -114,9 +116,10 @@ const ProfileSection = () => {
 
       {/* About Me Card */}
       <motion.div 
-        className="bg-gray-800/50 backdrop-blur-md rounded-xl p-8 border border-purple-500/20"
+        className="bg-gray-800/50 backdrop-blur-md rounded-xl p-8 border border-purple-500/20 will-change-transform"
         variants={itemVariants}
         whileHover={{ scale: 1.02 }}
+        transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
       >
         <h3 className="text-2xl font-bold text-white mb-6 flex items-center">
           <CodeBracketIcon className="h-6 w-6 mr-2 text-purple-400" />
@@ -159,9 +162,10 @@ const ProfileSection = () => {
 
       {/* 3D Vision Section */}
       <motion.div
-        className="bg-gray-800/50 backdrop-blur-md rounded-xl p-8 border border-purple-500/20"
+        className="bg-gray-800/50 backdrop-blur-md rounded-xl p-8 border border-purple-500/20 will-change-transform"
         variants={itemVariants}
         whileHover={{ scale: 1.02 }}
+        transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
       >
         <h3 className="text-2xl font-bold text-white mb-4 flex items-center">
           <GlobeAltIcon className="h-6 w-6 mr-2 text-purple-400" />

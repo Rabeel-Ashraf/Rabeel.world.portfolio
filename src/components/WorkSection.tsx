@@ -47,10 +47,12 @@ const WorkSection = () => {
         className="flex items-center justify-center min-h-[60vh]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
+        style={{ willChange: 'transform, opacity' }}
       >
         <motion.div 
-          className="bg-gray-800/50 backdrop-blur-md rounded-xl p-8 border border-purple-500/20 w-full max-w-md"
+          className="bg-gray-800/50 backdrop-blur-md rounded-xl p-8 border border-purple-500/20 w-full max-w-md will-change-transform"
           whileHover={{ scale: 1.02 }}
+          transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
         >
           <div className="text-center space-y-6">
             <div className="flex justify-center">

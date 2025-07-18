@@ -5,9 +5,10 @@ import Header from './components/Header';
 import ProfileSection from './components/ProfileSection';
 import GallerySection from './components/GallerySection';
 import WorkSection from './components/WorkSection';
-import FloatingParticles from './components/FloatingParticles';
 import NotFound from './components/NotFound';
 import EnhancedTouchEffects from './components/EnhancedTouchEffects';
+import GlobalTouchHandler from './components/GlobalTouchHandler';
+
 const MainPortfolio = () => {
   const [currentSection, setCurrentSection] = useState('Profile');
 
@@ -16,12 +17,18 @@ const MainPortfolio = () => {
     visible: { 
       opacity: 1, 
       x: 0,
-      transition: { duration: 0.6, ease: "easeOut" }
+      transition: { 
+        duration: 0.6, 
+        ease: [0.4, 0, 0.2, 1] // Custom cubic-bezier for smoother animation
+      }
     },
     exit: { 
       opacity: 0, 
       x: -100,
-      transition: { duration: 0.4, ease: "easeIn" }
+      transition: { 
+        duration: 0.4, 
+        ease: [0.4, 0, 1, 1] // Smooth exit animation
+      }
     }
   };
 
@@ -39,14 +46,14 @@ const MainPortfolio = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 relative">
       
       <Header 
         currentSection={currentSection}
         setCurrentSection={setCurrentSection}
       />
       
-      <main className="relative z-10 pt-20 pb-16">
+      <main className="relative z-10 pt-20 pb-16 will-change-scroll">
         <div className="container mx-auto px-6">
           <AnimatePresence mode="wait">
             <motion.div
@@ -55,7 +62,7 @@ const MainPortfolio = () => {
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="min-h-screen"
+              className="min-h-screen will-change-transform"
             >
               {renderSection()}
             </motion.div>
@@ -108,6 +115,7 @@ const MainPortfolio = () => {
 function App() {
   return (
     <Router>
+      <GlobalTouchHandler />
       <EnhancedTouchEffects />
       <Routes>
         <Route path="/" element={<MainPortfolio />} />

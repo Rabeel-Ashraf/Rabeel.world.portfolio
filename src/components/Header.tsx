@@ -10,10 +10,10 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ currentSection, setCurrentSection }) => {
   return (
     <motion.header 
-      className="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-md border-b border-purple-500/20"
+      className="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-md border-b border-purple-500/20 will-change-transform"
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      transition={{ duration: 0.8 }}
+      transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
     >
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
@@ -36,9 +36,10 @@ const Header: React.FC<HeaderProps> = ({ currentSection, setCurrentSection }) =>
                   currentSection === section
                     ? 'bg-purple-600/20 text-purple-400 border border-purple-500/30'
                     : 'text-gray-300 hover:text-purple-400 hover:bg-purple-600/10'
-                }`}
+                } will-change-transform`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
               >
                 {section}
               </motion.button>

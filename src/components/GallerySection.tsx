@@ -82,10 +82,12 @@ const GallerySection = () => {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
+      style={{ willChange: 'transform, opacity' }}
     >
       <motion.div 
         className="text-center space-y-4"
         variants={itemVariants}
+        style={{ willChange: 'transform, opacity' }}
       >
         <h2 className="text-4xl font-bold text-white">Project Gallery</h2>
         <p className="text-xl text-gray-400 max-w-2xl mx-auto">
@@ -97,17 +99,19 @@ const GallerySection = () => {
       <motion.div 
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         variants={containerVariants}
+        style={{ willChange: 'transform, opacity' }}
       >
         {projects.map((project, index) => (
           <motion.div
             key={index}
-            className="bg-gray-800/50 backdrop-blur-md rounded-xl p-6 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300"
+            className="bg-gray-800/50 backdrop-blur-md rounded-xl p-6 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 will-change-transform"
             variants={itemVariants}
             whileHover={{ 
               scale: 1.05,
               y: -5,
               boxShadow: '0 20px 40px rgba(147, 51, 234, 0.3)'
             }}
+            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
           >
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
