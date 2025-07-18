@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useMemo } from 'react';
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
-import { TextureLoader, ShaderMaterial, Vector3, AdditiveBlending, BackSide } from 'three';
+import { TextureLoader, ShaderMaterial, Vector3, AdditiveBlending, BackSide, DoubleSide } from 'three';
 import * as THREE from 'three';
 
 // Custom Earth shader for day/night cycle
@@ -35,17 +35,17 @@ const earthFragmentShader = `
     
     // Calculate lighting
     float intensity = dot(vNormal, sunDirection);
-    float mixFactor = smoothstep(-0.1, 0.1, intensity);
+    float mixFactor = smoothstep(-0.2, 0.2, intensity);
     
     // Mix day and night textures
-    vec3 color = mix(nightColor * 2.0, dayColor, mixFactor);
+    vec3 color = mix(nightColor * 2.5, dayColor, mixFactor);
     
     // Add specular highlights for oceans
     if (mixFactor > 0.5) {
       vec3 viewDirection = normalize(cameraPosition - vPosition);
       vec3 reflectDirection = reflect(-sunDirection, vNormal);
       float specularIntensity = pow(max(dot(viewDirection, reflectDirection), 0.0), 32.0);
-      color += specular * specularIntensity * vec3(0.8, 0.9, 1.0) * 0.5;
+      color += specular * specularIntensity * vec3(0.8, 0.9, 1.0) * 0.8;
     }
     
     gl_FragColor = vec4(color, 1.0);
@@ -78,10 +78,10 @@ const Earth = () => {
   const cloudsRef = useRef<THREE.Mesh>(null);
   
   // Load high-quality textures
-  const dayTexture = useLoader(TextureLoader, 'https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?w=2048&h=1024&fit=crop');
-  const nightTexture = useLoader(TextureLoader, 'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=2048&h=1024&fit=crop');
-  const specularTexture = useLoader(TextureLoader, 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=2048&h=1024&fit=crop');
-  const cloudsTexture = useLoader(TextureLoader, 'https://images.unsplash.com/photo-1534088568595-a066f410bcda?w=2048&h=1024&fit=crop');
+  const dayTexture = useLoader(TextureLoader, 'https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?w=4096&h=2048&fit=crop&q=90');
+  const nightTexture = useLoader(TextureLoader, 'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=4096&h=2048&fit=crop&q=90');
+  const specularTexture = useLoader(TextureLoader, 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=4096&h=2048&fit=crop&q=90');
+  const cloudsTexture = useLoader(TextureLoader, 'https://images.unsplash.com/photo-1534088568595-a066f410bcda?w=4096&h=2048&fit=crop&q=90');
   
   // Get user's timezone and calculate sun position
   const { sunDirection, rotationOffset } = useMemo(() => {
@@ -146,8 +146,9 @@ const Earth = () => {
     return new THREE.MeshLambertMaterial({
       map: cloudsTexture,
       transparent: true,
-      opacity: 0.4,
-      blending: AdditiveBlending
+      opacity: 0.6,
+      blending: AdditiveBlending,
+      side: DoubleSide
     });
   }, [cloudsTexture]);
   
@@ -156,13 +157,13 @@ const Earth = () => {
     
     if (meshRef.current) {
       // Realistic Earth rotation (1 day = 24 hours, but sped up for demo)
-      meshRef.current.rotation.y = rotationOffset + time * 0.01;
+      meshRef.current.rotation.y = rotationOffset + time * 0.008;
       earthMaterial.uniforms.time.value = time;
     }
     
     if (cloudsRef.current) {
       // Clouds rotate slightly faster
-      cloudsRef.current.rotation.y = rotationOffset + time * 0.012;
+      cloudsRef.current.rotation.y = rotationOffset + time * 0.010;
     }
     
     if (atmosphereRef.current) {
@@ -174,17 +175,17 @@ const Earth = () => {
     <group>
       {/* Earth */}
       <mesh ref={meshRef} material={earthMaterial}>
-        <sphereGeometry args={[1.5, 128, 64]} />
+        <sphereGeometry args={[1.5, 256, 128]} />
       </mesh>
       
       {/* Clouds */}
       <mesh ref={cloudsRef} material={cloudsMaterial}>
-        <sphereGeometry args={[1.53, 64, 32]} />
+        <sphereGeometry args={[1.53, 128, 64]} />
       </mesh>
       
       {/* Atmosphere */}
       <mesh ref={atmosphereRef} material={atmosphereMaterial}>
-        <sphereGeometry args={[1.6, 32, 16]} />
+        <sphereGeometry args={[1.6, 64, 32]} />
       </mesh>
     </group>
   );
@@ -204,9 +205,9 @@ const Stars = () => {
     const starsVertices = [];
     const starsColors = [];
     
-    for (let i = 0; i < 15000; i++) {
+    for (let i = 0; i < 20000; i++) {
       // Create sphere distribution
-      const radius = 100;
+      const radius = 150;
       const u = Math.random();
       const v = Math.random();
       const theta = 2 * Math.PI * u;
@@ -220,7 +221,7 @@ const Stars = () => {
       
       // Add some color variation
       const color = new THREE.Color();
-      color.setHSL(0.6 + Math.random() * 0.2, 0.5, 0.5 + Math.random() * 0.5);
+      color.setHSL(0.6 + Math.random() * 0.3, 0.4 + Math.random() * 0.4, 0.6 + Math.random() * 0.4);
       starsColors.push(color.r, color.g, color.b);
     }
     
@@ -244,20 +245,20 @@ const Stars = () => {
 
 const RealisticEarth = () => {
   return (
-    <div className="w-full h-80 md:h-96 rounded-xl overflow-hidden bg-black border border-cyan-500/30 relative">
+    <div className="w-full h-80 md:h-96 rounded-xl overflow-hidden bg-black border-2 border-cyan-400/40 relative shadow-[0_0_30px_rgba(6,182,212,0.3)]">
       <Canvas 
         camera={{ position: [0, 0, 4], fov: 60 }}
-        gl={{ antialias: true, alpha: true }}
+        gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       >
         {/* Lighting setup */}
-        <ambientLight intensity={0.1} />
+        <ambientLight intensity={0.15} />
         <directionalLight 
           position={[5, 3, 5]} 
-          intensity={1.2} 
+          intensity={1.5} 
           color="#ffffff"
           castShadow
         />
-        <pointLight position={[-5, -5, -5]} intensity={0.3} color="#4a90e2" />
+        <pointLight position={[-5, -5, -5]} intensity={0.4} color="#4a90e2" />
         
         {/* Scene objects */}
         <Stars />
@@ -265,17 +266,20 @@ const RealisticEarth = () => {
       </Canvas>
       
       {/* Glowing border effect */}
-      <div className="absolute inset-0 rounded-xl border-2 border-cyan-400/20 pointer-events-none">
+      <div className="absolute inset-0 rounded-xl border-2 border-cyan-400/30 pointer-events-none animate-pulse">
         <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-500/5 via-transparent to-blue-500/5" />
       </div>
       
       {/* Info overlay */}
-      <div className="absolute bottom-4 left-4 text-xs text-cyan-300 bg-black/50 px-3 py-2 rounded-lg backdrop-blur-sm">
+      <div className="absolute bottom-4 left-4 text-xs text-cyan-300 bg-black/70 px-3 py-2 rounded-lg backdrop-blur-sm border border-cyan-500/30">
         <div className="flex items-center space-x-2">
-          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-          <span>Live Earth • Real-time Timezone</span>
+          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]"></div>
+          <span className="font-mono">Live Earth • Real-time Timezone</span>
         </div>
       </div>
+      
+      {/* Additional glow effects */}
+      <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-cyan-500/10 via-blue-500/10 to-cyan-500/10 blur-xl pointer-events-none" />
     </div>
   );
 };
